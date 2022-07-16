@@ -44,29 +44,28 @@ def save_session_history(ctx: Context, actor: Actor, *args, **kwargs) -> Context
     return ctx
 
 
-def custom_response(ctx: Context, actor: Actor, *args, **kwargs):
+def operator_custom_response(ctx: Context, actor: Actor, *args, **kwargs):
     """Configuring an operator's response"""
-
     if re.search(r"(?i)(model)", ctx.last_request):
         section = "Our models"
-        ctx.current_node.response = (
-            f"Would you like me to transfer you to \033[36m<{section}>\033[32m section?"
-            f"\n\t[Y] > confirm transfer"
-            f"\n\t[n] > go back to reception"
-        )
-        ctx.overwrite_current_node_in_processing(ctx.current_node)
-    if re.search(r"(?i)(drive)", ctx.last_request):
+    elif re.search(r"(?i)(drive)", ctx.last_request):
         section = "Sign up for a test drive"
-        ctx.current_node.response = (
-            f"Would you like me to transfer you to \033[36m<{section}>\033[32m section?"
-            f"\n\t[Y] > confirm transfer"
-            f"\n\t[n] > go back to reception"
-        )
-        ctx.overwrite_current_node_in_processing(ctx.current_node)
+    elif re.search(r"(?i)(dealer)", ctx.last_request):
+        section = "Find a dealer"
+    elif re.search(r"(?i)(service)", ctx.last_request):
+        section = "Assistance service"
+    else:
+        return ctx
+    ctx.current_node.response = (
+        f"Would you like me to transfer you to \033[36m<{section}>\033[32m section?"
+        f"\n\t[Y] > confirm transfer"
+        f"\n\t[n] > go back to reception"
+    )
+    ctx.overwrite_current_node_in_processing(ctx.current_node)
     return ctx
 
 
-def custom_transfer(ctx: Context, actor: Actor, *args, **kwargs):
+def operator_custom_transfer(ctx: Context, actor: Actor, *args, **kwargs):
     """Returns the NodeLabel2Type depending on request"""
 
     if re.search("y", ctx.last_request):
@@ -80,7 +79,7 @@ def custom_transfer(ctx: Context, actor: Actor, *args, **kwargs):
         elif re.search("dealer", pre_request):
             return "dealer_flow", "node1", 1.1
         elif re.search("service", pre_request):
-            return "service_flow", "service_node", 1.1
+            return "service_flow", "node1", 1.1
     if re.search("n", ctx.last_request):
         return "operator_flow", "reception_node"
     return "root", "fallback_node", 1.1
