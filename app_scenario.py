@@ -6,8 +6,8 @@ from app_tools import (
     get_help,
     save_session_history,
     home_page,
-    custom_transfer,
-    custom_response,
+    operator_custom_transfer,
+    operator_custom_response,
     get_history,
 )
 from df_engine.core.keywords import (
@@ -25,9 +25,9 @@ script = {
             TRANSITIONS: {
                 ("operator_flow", "reception_node"): cnd.exact_match("1"),
                 ("models_flow", "node1"): cnd.exact_match("2"),
-                # ("test_drive_flow", "node1"): cnd.exact_match("3"),
-                # ("dealer_flow", "node1"): cnd.exact_match("4"),
-                # ("service_flow", "node1"): cnd.exact_match("5")
+                ("test_drive_flow", "node1"): cnd.exact_match("3"),
+                ("dealer_flow", "node1"): cnd.exact_match("4"),
+                ("service_flow", "node1"): cnd.exact_match("5")
             },
         },
         "fallback_node": {
@@ -58,11 +58,11 @@ script = {
         },
         "confirmation_node": {
             PRE_RESPONSE_PROCESSING: {
-                "confirm_transfer": custom_response,
+                "confirm_transfer": operator_custom_response,
             },
             RESPONSE: "",
             TRANSITIONS: {
-                custom_transfer: cnd.regexp(r"y|n", re.I),
+                operator_custom_transfer: cnd.regexp(r"y|n", re.I),
             },
         },
     },
