@@ -7,8 +7,9 @@ from app_tools import (
     save_session_history,
     home_page,
     operator_custom_transfer,
-    operator_custom_response,
+    operator_transfer_confirmation,
     get_history,
+    operator_clarifying_question,
 )
 from df_engine.core.keywords import (
     TRANSITIONS,
@@ -27,7 +28,7 @@ script = {
                 ("models_flow", "node1"): cnd.exact_match("2"),
                 ("test_drive_flow", "node1"): cnd.exact_match("3"),
                 ("dealer_flow", "node1"): cnd.exact_match("4"),
-                ("service_flow", "node1"): cnd.exact_match("5")
+                ("service_flow", "node1"): cnd.exact_match("5"),
             },
         },
         "fallback_node": {
@@ -43,22 +44,22 @@ script = {
         TRANSITIONS: {
             lbl.to_start(): cnd.regexp(r"home|start|hello|hi", re.I),
             lbl.repeat(1.1): cnd.regexp(r"help|history", re.I),
-            lbl.backward(): cnd.regexp(r"back", re.I),
+            lbl.previous(): cnd.regexp(r"back", re.I),
         },
     },
     "operator_flow": {
         "reception_node": {
-            # PRE_RESPONSE_PROCESSING: {
-            #     "repeat_request": custom_response,  # need to process unconfirmed answer
-            # },
+            PRE_RESPONSE_PROCESSING: {
+                "clarifying_question": operator_clarifying_question,
+            },
             RESPONSE: "How can I help you?",
             TRANSITIONS: {
-                lbl.forward(): cnd.true(),
+                lbl.forward(): cnd.true(),  # TODO: add processing of undefined query
             },
         },
-        "confirmation_node": {
+        "request_confirmation_node": {
             PRE_RESPONSE_PROCESSING: {
-                "confirm_transfer": operator_custom_response,
+                "transfer_confirmation": operator_transfer_confirmation,
             },
             RESPONSE: "",
             TRANSITIONS: {
@@ -68,27 +69,29 @@ script = {
     },
     "models_flow": {
         "node1": {
-            RESPONSE: "Choose a model: .....",  # returns a list of models
+            RESPONSE: "Choose a model: .....",  # TODO: add a list of models
             TRANSITIONS: {
                 "node2": cnd.regexp(r"granta", re.I),
                 "node3": cnd.regexp(r"kalina", re.I),
             },
         },
         "node2": {
-            RESPONSE: "Let me present you LADA GRANTA....",  # returns info about model #1
+            RESPONSE: "Let me present you LADA GRANTA....",  # TODO: add info about models
             TRANSITIONS: {lbl.forward(): cnd.regexp(r"next", re.I)},
         },
-        "node3": {RESPONSE: "Let me present you LADA KALINA....."},  # returns info about model #2
+        "node3": {
+            RESPONSE: "Let me present you LADA KALINA....."
+        },  # returns info about model #2
     },
     "test_drive_flow": {
         "node1": {
-            RESPONSE: "Let's find the nearest available date for a test drive!",  # some accounting of test entries
+            RESPONSE: "Let's find the nearest available date for a test drive!",  # TODO: add sign up form
             TRANSITIONS: {},
         },
     },
     "dealer_flow": {
         "node1": {
-            RESPONSE: "Here is the list of dealer addresses .....",  # some details
+            RESPONSE: "Here is the list of dealer addresses .....",  # TODO: add info
         },
     },
     "service_flow": {
