@@ -44,7 +44,15 @@ def save_session_history(ctx: Context, actor: Actor, *args, **kwargs) -> Context
     return ctx
 
 
-def operator_custom_response(ctx: Context, actor: Actor, *args, **kwargs):
+def operator_clarifying_question(ctx: Context, actor: Actor, *args, **kwargs):
+    if ctx.framework_states["actor"]["previous_label"][0] == "operator_flow":
+        if re.search("n", ctx.last_request):
+            ctx.current_node.response = f"Please rephrase your question.."
+            ctx.overwrite_current_node_in_processing(ctx.current_node)
+    return ctx
+
+
+def operator_transfer_confirmation(ctx: Context, actor: Actor, *args, **kwargs):
     """Configuring an operator's response"""
     if re.search(r"(?i)(model)", ctx.last_request):
         section = "Our models"
@@ -79,7 +87,5 @@ def operator_custom_transfer(ctx: Context, actor: Actor, *args, **kwargs):
         elif re.search("dealer", pre_request):
             return "dealer_flow", "node1", 1.1
         elif re.search("service", pre_request):
-            return "service_flow", "node1", 1.1
-    if re.search("n", ctx.last_request):
-        return "operator_flow", "reception_node"
-    return "root", "fallback_node", 1.1
+            return "service_flow", "service_node", 1.1
+    return "operator_flow", "reception_node"
