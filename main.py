@@ -25,7 +25,9 @@ def turn_handler(
     ctx = actor(ctx)
     out_response = ctx.last_response
     logging.info(
-        "\033[37mBot: \033[3m\033[32m{}\033[37m\n<<hint>> I'm here: {}\033[0m".format(out_response, ctx.last_label)
+        "\033[37mBot: \033[3m\033[32m{}\033[37m\n<<hint>> I'm here: {}\033[0m".format(
+            out_response, ctx.last_label
+        )
     )
     return out_response, ctx
 
