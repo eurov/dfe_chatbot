@@ -1,5 +1,5 @@
 :construction: **Crude version!**
-##  DRF Console chatbot 
+##  DFE Console chatbot 
 
 The app is built on [Dialog Flow Engine (DFE)](https://github.com/deepmipt/dialog_flow_engine). 
 
@@ -16,5 +16,6 @@ pip install -r requirements.txt
 To initialize the chat: 
 ```
 python main.py
+
 start
 ```
