@@ -45,8 +45,9 @@ def save_session_history(ctx: Context, actor: Actor, *args, **kwargs) -> Context
 
 
 def operator_clarifying_question(ctx: Context, actor: Actor, *args, **kwargs):
+    """Overwrites reception node response"""
     if ctx.framework_states["actor"]["previous_label"][0] == "operator_flow":
-        if re.search("n", ctx.last_request):
+        if re.search("(?i)[a-z]", ctx.last_request):
             ctx.current_node.response = f"Please rephrase your question.."
             ctx.overwrite_current_node_in_processing(ctx.current_node)
     return ctx
