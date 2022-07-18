@@ -25,7 +25,7 @@ def turn_handler(
     ctx = actor(ctx)
     out_response = ctx.last_response
     logging.info(
-        "\033[37mBot: \033[3m\033[32m{}\033[37m\n<<hint>> I'm here: {}\033[0m".format(
+        "\033[37mBot: \033[3m\033[32m{}\033[37m\n<<hint>> I'm here: {}\033[0m".format(  # TODO:hard to read -> colorama?
             out_response, ctx.last_label
         )
     )
@@ -35,7 +35,7 @@ def turn_handler(
 def run_interactive_mode(_actor):
     ctx = {}
     while True:
-        time.sleep(0.1)
+        time.sleep(0.1)  # added to avoid output overlapping
         in_request = input("Me: ")
         _, ctx = turn_handler(in_request, ctx, actor)
 

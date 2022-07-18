@@ -24,7 +24,7 @@ def get_help(ctx: Context, actor: Actor, *args, **kwargs):
 def get_history(ctx: Context, actor: Actor, *args, **kwargs):
     """Returns current session history"""
     if re.search(r"(?i)(history)", ctx.last_request):
-        history = json.dumps(ctx.misc, indent=4)
+        history = json.dumps(ctx.misc, indent=4)  # TODO: change the serialization method -> make it manually
         ctx.current_node.response = f"{ctx.last_response}\n\t\033[36m<Current session history>\n{history}\033[32m"
         ctx.overwrite_current_node_in_processing(ctx.current_node)
     return ctx
@@ -34,13 +34,13 @@ def save_session_history(ctx: Context, actor: Actor, *args, **kwargs) -> Context
     """Stores current chat history in ctx.misc"""
     dt = datetime.now()
     dt_string = dt.strftime("Date: %d/%m/%Y  time: %H:%M:%S")
-    ctx.misc[f"{dt_string} :> Me"] = ctx.last_request  # saving a last user request
+    ctx.misc[f"{dt_string} :> Me"] = ctx.last_request  # TODO: store it as data structure
     processed_node = ctx.current_node
     if hasattr(processed_node.response, "__call__"):
         value = processed_node.response.__name__
     else:
         value = processed_node.response
-    ctx.misc[f"{dt_string} :> Bot"] = value  # saving a last bot response
+    ctx.misc[f"{dt_string} :> Bot"] = value
     return ctx
 
 
@@ -54,7 +54,7 @@ def operator_clarifying_question(ctx: Context, actor: Actor, *args, **kwargs):
 
 def operator_transfer_confirmation(ctx: Context, actor: Actor, *args, **kwargs):
     """Configuring an operator's response"""
-    if re.search(r"(?i)(model)", ctx.last_request):
+    if re.search(r"(?i)(model)", ctx.last_request):  # TODO: initialize var with menu structure
         section = "Our models"
     elif re.search(r"(?i)(drive)", ctx.last_request):
         section = "Sign up for a test drive"
