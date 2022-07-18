@@ -54,7 +54,8 @@ script = {
             },
             RESPONSE: "How can I help you?",
             TRANSITIONS: {
-                lbl.forward(): cnd.true(),  # TODO: add processing of undefined query
+                lbl.forward(): cnd.regexp(r"model|drive|dealer|service", re.I),
+                lbl.repeat(0.9): cnd.true(),
             },
         },
         "request_confirmation_node": {
