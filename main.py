@@ -1,12 +1,27 @@
+from configparser import ConfigParser
 import logging
+import random
 import time
-from typing import Union
-from df_engine.core import Context, Actor
+from colorama import Fore
 
-from app_scenario import script
+from df_db_connector import connector_factory
+from df_engine.core import Context, Actor
+from scenario import script
 
 
 logger = logging.getLogger(__name__)
+
+parser = ConfigParser()
+parser.read("config.ini")
+
+DB_NAME = parser.get("db", "db_name")
+DB_LOGIN = parser.get("db", "db_login")
+DB_PASSWORD = parser.get("db", "db_password")
+
+db = connector_factory(
+    f"postgresql://{DB_LOGIN}:{DB_PASSWORD}@localhost:5432/{DB_NAME}"  #TODO: try except?
+)
+
 
 actor = Actor(
     script,
@@ -14,30 +29,31 @@ actor = Actor(
     fallback_label=("root", "fallback_node"),
 )
 
+USER_ID = str(random.randint(0, 100))
+
 
 def turn_handler(
     in_request: str,
-    ctx: Union[Context, str, dict],
+    user_id: str,
     _actor: Actor,
 ):
-    ctx = Context.cast(ctx)
+    ctx = db.get(user_id, Context(id=user_id))
     ctx.add_request(in_request)
     ctx = actor(ctx)
     out_response = ctx.last_response
+    db[user_id] = ctx
+
     logging.info(
-        "\033[37mBot: \033[3m\033[32m{}\033[37m\n<<hint>> I'm here: {}\033[0m".format(  # TODO:hard to read -> colorama?
-            out_response, ctx.last_label
-        )
+        f"{Fore.WHITE}Bot: {Fore.GREEN}{out_response} \n{Fore.WHITE}<<hint>> I'm here: {ctx.last_label}"
     )
     return out_response, ctx
 
 
 def run_interactive_mode(_actor):
-    ctx = {}
     while True:
         time.sleep(0.1)  # added to avoid output overlapping
         in_request = input("Me: ")
-        _, ctx = turn_handler(in_request, ctx, actor)
+        turn_handler(in_request, USER_ID, actor)
 
 
 if __name__ == "__main__":
