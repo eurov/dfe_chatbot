@@ -3,61 +3,85 @@ from colorama import Fore
 
 import df_engine.conditions as cnd
 import df_engine.labels as lbl
-from tools import sorting_hat, get_help, pickup_wand, get_start_navi_hint, get_ollivanders_offer
+from tools import (
+    get_help,
+    pickup_wand,
+    get_hagrid_greeting,
+    get_ollivander_offer,
+    get_hogwarts_navi_hint,
+    get_hat_navi_hint,
+    get_grade,
+    get_fallback_navi_hint,
+)
 from df_engine.core.keywords import (
     TRANSITIONS,
     RESPONSE,
     GLOBAL,
-    PRE_RESPONSE_PROCESSING, PRE_TRANSITIONS_PROCESSING,
+    PRE_RESPONSE_PROCESSING,
+    PRE_TRANSITIONS_PROCESSING,
 )
 
-from vocabulary import hagrids_greeting, ollivanders_speech
+from text import (
+    OLLIVANDER_SPEECH,
+    DUMBLEDORE_SPEECH,
+    HARRY_SPEECH,
+)
 
 script = {
     "root": {
         "start_node": {
-            PRE_RESPONSE_PROCESSING: {
-                "navi": get_start_navi_hint
-            },
-            RESPONSE: hagrids_greeting,
+            PRE_RESPONSE_PROCESSING: {"hagrid_greeting": get_hagrid_greeting},
+            RESPONSE: "",
             TRANSITIONS: {
-                ("first_year", "ollivanders_shop"): cnd.exact_match("start"),
+                get_grade: cnd.exact_match("start"),
             },
         },
-        "fallback_node": {RESPONSE: f"{Fore.MAGENTA} Avada Kedavra!"},
+        "fallback_node": {
+            PRE_RESPONSE_PROCESSING: {"navi": get_fallback_navi_hint},
+            RESPONSE: f"{Fore.MAGENTA} Avada Kedavra!",
+        },
     },
     GLOBAL: {
         PRE_RESPONSE_PROCESSING: {
             "help": get_help,
         },
         TRANSITIONS: {
-            lbl.to_start(): cnd.regexp(r"home|start|hello|hi", re.I),
+            lbl.to_start(): cnd.regexp(r"home|hello|hi", re.I),
             lbl.repeat(): cnd.exact_match(r"help", re.I),
             lbl.previous(): cnd.exact_match(r"back", re.I),
         },
     },
     "first_year": {
-        "ollivanders_shop": {
-            PRE_RESPONSE_PROCESSING: {
-                "navi": get_ollivanders_offer
-            },
-            RESPONSE: ollivanders_speech,
+        "ollivander_shop": {
+            PRE_RESPONSE_PROCESSING: {"navi": get_ollivander_offer},
+            RESPONSE: OLLIVANDER_SPEECH,
             PRE_TRANSITIONS_PROCESSING: {
                 "pickup_wand": pickup_wand,
             },
+            TRANSITIONS: {lbl.forward(): cnd.regexp(r"1|2|3")},
+        },
+        "hogwarts_school": {
+            PRE_RESPONSE_PROCESSING: {
+                "navi": get_hogwarts_navi_hint,
+            },
+            RESPONSE: DUMBLEDORE_SPEECH,
             TRANSITIONS: {
-                lbl.forward(): cnd.regexp(r'1|2|3')
+                lbl.forward(): cnd.exact_match(r"hat", re.I),
             },
         },
         "sorting_hat": {
             PRE_RESPONSE_PROCESSING: {
-                "sorting": sorting_hat,
+                "navi": get_hat_navi_hint,
             },
-            RESPONSE: "Let the Sorting Hat decide where you will study!",
+            RESPONSE: "",
             TRANSITIONS: {
-                lbl.forward(): cnd.exact_match(r"fwd", re.I),
-                lbl.repeat(): cnd.exact_match(r"hat", re.I),
+                ("second_year", "platform 9¾"): cnd.exact_match(r"next", re.I),
             },
+        },
+    },
+    "second_year": {
+        "platform 9¾": {
+            RESPONSE: HARRY_SPEECH,
         },
     },
 }
