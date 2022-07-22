@@ -1,3 +1,4 @@
+import sys
 from configparser import ConfigParser
 import logging
 import random
@@ -15,11 +16,13 @@ parser = ConfigParser()
 parser.read("config.ini")
 
 DB_NAME = parser.get("db", "db_name")
+DB_HOST = parser.get("db", "db_host")
+DB_PORT = parser.get("db", "db_port")
 DB_LOGIN = parser.get("db", "db_login")
 DB_PASSWORD = parser.get("db", "db_password")
 
-db = connector_factory(
-    f"postgresql://{DB_LOGIN}:{DB_PASSWORD}@localhost:5432/{DB_NAME}"  #TODO: try except?
+db = connector_factory(  # try except?
+    f"postgresql://{DB_LOGIN}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
 
 
@@ -29,12 +32,10 @@ actor = Actor(
     fallback_label=("root", "fallback_node"),
 )
 
-USER_ID = str(random.randint(0, 100))
-
 
 def turn_handler(
     in_request: str,
-    user_id: str,
+    _user_id: str,
     _actor: Actor,
 ):
     ctx = db.get(user_id, Context(id=user_id))
@@ -49,11 +50,11 @@ def turn_handler(
     return out_response, ctx
 
 
-def run_interactive_mode(_actor):
+def run_interactive_mode(_actor, _user_id):
     while True:
         time.sleep(0.1)  # added to avoid output overlapping
         in_request = input("Me: ")
-        turn_handler(in_request, USER_ID, actor)
+        turn_handler(in_request, user_id, actor)
 
 
 if __name__ == "__main__":
@@ -61,4 +62,9 @@ if __name__ == "__main__":
         format="%(message)s",
         level=logging.INFO,
     )
-    run_interactive_mode(actor)
+    if len(sys.argv) > 1:
+        user_id = sys.argv[1]
+    else:
+        user_id = str(random.randint(0, 100))
+    logging.info(user_id)
+    run_interactive_mode(actor, user_id)
