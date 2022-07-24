@@ -1,7 +1,7 @@
 import unittest
 import random
 
-from main import turn_handler, actor, db
+from main import turn_handler, ACTOR, db
 
 
 new_user_requests = {
@@ -78,7 +78,7 @@ class TestHandler(unittest.TestCase):
             with self.subTest(name=name):
                 out_response = None
                 for request in scenario["path"]:
-                    out_response, ctx = turn_handler(request, user_id, actor)
+                    out_response, ctx = turn_handler(request, user_id, ACTOR)
                 if "expected_response" in scenario:
                     self.assertTrue(scenario["expected_response"] in out_response, name)
                 self.assertEqual(ctx.last_label[1], scenario["expected_node"], name)
@@ -90,7 +90,7 @@ class TestHandler(unittest.TestCase):
             with self.subTest(name=name):
                 out_response = None
                 for request in scenario["path"]:
-                    out_response, ctx = turn_handler(request, user_id, actor)
+                    out_response, ctx = turn_handler(request, user_id, ACTOR)
                 if "expected_response" in scenario:
                     self.assertTrue(scenario["expected_response"] in out_response, name)
                 self.assertEqual(ctx.last_label[1], scenario["expected_node"], name)
