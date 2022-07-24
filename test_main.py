@@ -4,7 +4,7 @@ import random
 from main import turn_handler, actor, db
 
 
-requests = {
+new_user_requests = {
     "first_scenario": {
         "path": ["hi"],
         "expected_response": "Hello, Muggle!",
@@ -40,12 +40,40 @@ requests = {
         "expected_response": "Yo, buddy!",
         "expected_node": "platform 9¾",
     },
+    "eighth_scenario": {
+        "path": ["hi", "start", "1", "hat", "next", "blabla"],
+        "expected_response": "Avada Kedavra!",
+        "expected_node": "fallback_node",
+    },
+    "ninth_scenario": {
+        "path": ["hi", "start", "1", "hat", "next", "back"],
+        "expected_response": "Congrats",
+        "expected_node": "sorting_hat",
+    },
+}
+
+known_user_requests = {
+    "fill_misc": {
+        "path": ["hi", "start", "1", "hat", "next"],
+        "expected_response": "Yo, buddy!",
+        "expected_node": "platform 9¾",
+    },
+    "first_scenario": {
+        "path": ["hi"],
+        "expected_response": "Glad to see you again!",
+        "expected_node": "start_node",
+    },
+    "second_scenario": {
+        "path": ["hi", "start"],
+        "expected_response": "Yo, buddy!",
+        "expected_node": "platform 9¾",
+    },
 }
 
 
 class TestHandler(unittest.TestCase):
-    def test_dialog_paths(self):
-        for name, scenario in requests.items():
+    def test_new_user(self) -> None:
+        for name, scenario in new_user_requests.items():
             user_id = str(random.randint(0, 100))
             with self.subTest(name=name):
                 out_response = None
@@ -55,6 +83,17 @@ class TestHandler(unittest.TestCase):
                     self.assertTrue(scenario["expected_response"] in out_response, name)
                 self.assertEqual(ctx.last_label[1], scenario["expected_node"], name)
                 db.clear()
+
+    def test_known_user(self) -> None:
+        for name, scenario in known_user_requests.items():
+            user_id = "1000"
+            with self.subTest(name=name):
+                out_response = None
+                for request in scenario["path"]:
+                    out_response, ctx = turn_handler(request, user_id, actor)
+                if "expected_response" in scenario:
+                    self.assertTrue(scenario["expected_response"] in out_response, name)
+                self.assertEqual(ctx.last_label[1], scenario["expected_node"], name)
 
 
 if __name__ == "__main":
