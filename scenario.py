@@ -1,5 +1,4 @@
 import re
-from colorama import Fore
 
 import df_engine.conditions as cnd
 import df_engine.labels as lbl
@@ -38,7 +37,7 @@ script = {
         },
         "fallback_node": {
             PRE_RESPONSE_PROCESSING: {"navi": get_fallback_navi_hint},
-            RESPONSE: f"{Fore.MAGENTA} Avada Kedavra!",
+            RESPONSE: "Avada Kedavra!",
         },
     },
     GLOBAL: {
