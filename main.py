@@ -26,7 +26,7 @@ db = connector_factory(  # try except?
 )
 
 
-actor = Actor(
+ACTOR = Actor(
     script,
     start_label=("root", "start_node"),
     fallback_label=("root", "fallback_node"),
@@ -35,8 +35,8 @@ actor = Actor(
 
 def turn_handler(
     in_request: str,
-    _user_id: str,
-    _actor: Actor,
+    user_id: str,
+    actor: Actor,
 ):
     ctx = db.get(user_id, Context(id=user_id))
     ctx.add_request(in_request)
@@ -50,7 +50,7 @@ def turn_handler(
     return out_response, ctx
 
 
-def run_interactive_mode(_actor, _user_id):
+def run_interactive_mode(actor, user_id):
     while True:
         time.sleep(0.1)  # added to avoid output overlapping
         in_request = input("Me: ")
@@ -63,8 +63,8 @@ if __name__ == "__main__":
         level=logging.INFO,
     )
     if len(sys.argv) > 1:
-        user_id = sys.argv[1]
+        USER_ID = sys.argv[1]
     else:
-        user_id = str(random.randint(0, 100))
-    logging.info(user_id)
-    run_interactive_mode(actor, user_id)
+        USER_ID = str(random.randint(0, 100))
+    logging.info(USER_ID)
+    run_interactive_mode(ACTOR, USER_ID)
