@@ -1,27 +1,60 @@
 import unittest
+import random
 
-from app_vocabulary import home_page_description
-from main import turn_handler, actor
-
-testing_dialog = [
-    ("start", home_page_description),
-    ("1", "How can I help you?"),
-    ("is it raining?", "Please rephrase your question.."),
-    ("home", home_page_description),
-    ("2", "Choose a model: ....."),
-    ("I heard a lot about Lada Kalina", "Let me present you LADA KALINA....."),
-    ("back", "Choose a model: ....."),
-    ("ferrari", "\033[31mSorry, I couldn't find anything for this query\033[0m"),
-]
+from main import turn_handler, actor, db
 
 
-# TODO: upgrade test scenario -> process a series of requests and check only final result
+requests = {
+    "first_scenario": {
+        "path": ["hi"],
+        "expected_response": "Hello, Muggle!",
+        "expected_node": "start_node",
+    },
+    "second_scenario": {
+        "path": ["hi", "help"],
+        "expected_response": "course of the dialogue",
+        "expected_node": "start_node",
+    },
+    "third_scenario": {
+        "path": ["hi", "start"],
+        "expected_response": "Mr.Ollivander has prepared",
+        "expected_node": "ollivander_shop",
+    },
+    "forth_scenario": {
+        "path": ["hi", "start", "help"],
+        "expected_response": "You are not a wizard without a wand!",
+        "expected_node": "ollivander_shop",
+    },
+    "fifth_scenario": {
+        "path": ["hi", "start", "1"],
+        "expected_response": "I see you've got the stuff.",
+        "expected_node": "hogwarts_school",
+    },
+    "sixth_scenario": {
+        "path": ["hi", "start", "1", "hat"],
+        "expected_response": "Congrats!",
+        "expected_node": "sorting_hat",
+    },
+    "seventh_scenario": {
+        "path": ["hi", "start", "1", "hat", "next"],
+        "expected_response": "Yo, buddy!",
+        "expected_node": "platform 9¾",
+    },
+}
+
+
 class TestHandler(unittest.TestCase):
-    def test_turn_handler(self):
-        ctx = {}
-        for in_request, true_out_response in testing_dialog:
-            out_response, ctx = turn_handler(in_request, ctx, actor)
-            self.assertEqual(out_response.strip(), true_out_response.strip())
+    def test_dialog_paths(self):
+        for name, scenario in requests.items():
+            user_id = str(random.randint(0, 100))
+            with self.subTest(name=name):
+                out_response = None
+                for request in scenario["path"]:
+                    out_response, ctx = turn_handler(request, user_id, actor)
+                if "expected_response" in scenario:
+                    self.assertTrue(scenario["expected_response"] in out_response, name)
+                self.assertEqual(ctx.last_label[1], scenario["expected_node"], name)
+                db.clear()
 
 
 if __name__ == "__main":
