@@ -1,5 +1,5 @@
+import os
 import sys
-from configparser import ConfigParser
 import logging
 import random
 import time
@@ -12,14 +12,12 @@ from scenario import script
 
 logger = logging.getLogger(__name__)
 
-parser = ConfigParser()
-parser.read("config.ini")
 
-DB_NAME = parser.get("db", "db_name")
-DB_HOST = parser.get("db", "db_host")
-DB_PORT = parser.get("db", "db_port")
-DB_LOGIN = parser.get("db", "db_login")
-DB_PASSWORD = parser.get("db", "db_password")
+DB_NAME = os.getenv("PG_NAME")
+DB_HOST = os.getenv("PG_HOST")
+DB_PORT = os.getenv("PG_PORT")
+DB_LOGIN = os.getenv("PG_USERNAME")
+DB_PASSWORD = os.getenv("PG_PASSWORD")
 
 db = connector_factory(  # try except?
     f"postgresql://{DB_LOGIN}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
