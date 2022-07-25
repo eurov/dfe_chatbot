@@ -9,6 +9,7 @@ pydantic = "*"
 typing-extensions = "*"
 colorama = "*"
 df-db-connector = {extras = ["postgresql"], version = "*"}
+df-runner = "*"
 
 [dev-packages]
 black = "*"

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "158716c088f7ce237d3fa33431fc777ead9f58529ffcd7b427ea80f6454b4034"
+            "sha256": "ba0ba53df5d71589da267b7c81275417d19508032497bb8ae9926ca662999d69"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -42,6 +42,14 @@
             ],
             "index": "pypi",
             "version": "==0.10.1"
+        },
+        "df-runner": {
+            "hashes": [
+                "sha256:18cb83df4ce11ed2f7819424dfb30865b63312f8ce8c5ab4d9f7d70cae29c2fe",
+                "sha256:d30059817d9c34af26fe5c68b276a8aaccefd084475199e81b1a02b7995563d9"
+            ],
+            "index": "pypi",
+            "version": "==0.1.2"
         },
         "greenlet": {
             "hashes": [
