@@ -1,0 +1,5 @@
+colorama==0.4.5
+df-db-connector[postgresql]==0.1.2
+df-engine==0.10.1
+python-dotenv==0.20.0
+

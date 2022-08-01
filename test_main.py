@@ -1,5 +1,6 @@
 import unittest
 import random
+from collections import OrderedDict
 
 from main import turn_handler, ACTOR, db
 
@@ -52,23 +53,34 @@ new_user_requests = {
     },
 }
 
-known_user_requests = {
-    "fill_misc": {
-        "path": ["hi", "start", "1", "hat", "next"],
-        "expected_response": "Yo, buddy!",
-        "expected_node": "platform 9¾",
-    },
-    "first_scenario": {
-        "path": ["hi"],
-        "expected_response": "Glad to see you again!",
-        "expected_node": "start_node",
-    },
-    "second_scenario": {
-        "path": ["hi", "start"],
-        "expected_response": "Yo, buddy!",
-        "expected_node": "platform 9¾",
-    },
-}
+known_user_requests = OrderedDict(
+    [
+        (
+            "fill_misc",
+            {
+                "path": ["hi", "start", "1", "hat", "next"],
+                "expected_response": "Yo, buddy!",
+                "expected_node": "platform 9¾",
+            },
+        ),
+        (
+            "first_scenario",
+            {
+                "path": ["hi"],
+                "expected_response": "Glad to see you again!",
+                "expected_node": "start_node",
+            },
+        ),
+        (
+            "second_scenario",
+            {
+                "path": ["hi", "start"],
+                "expected_response": "Yo, buddy!",
+                "expected_node": "platform 9¾",
+            },
+        ),
+    ]
+)
 
 
 class TestHandler(unittest.TestCase):
