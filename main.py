@@ -8,7 +8,9 @@ from colorama import Fore
 from df_db_connector import connector_factory
 from df_engine.core import Context, Actor
 from scenario import script
+from dotenv import load_dotenv
 
+load_dotenv()  # take environment variables from .env.
 
 logger = logging.getLogger(__name__)
 
