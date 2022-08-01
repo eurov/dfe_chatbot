@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  psql:
+  postgres:
     image: postgres:latest
     restart: unless-stopped
     environment:
@@ -9,13 +9,13 @@ services:
       POSTGRES_DB: $PG_NAME
     ports:
       - '5432:5432'
-  dfe:
-    image: dfe:latest
+  dfe_chatbot:
+    build: .
     environment:
       PG_USERNAME: $PG_USERNAME
       PG_PASSWORD: $PG_PASSWORD
       PG_NAME: $PG_NAME
-      PG_HOST: psql
+      PG_HOST: postgres
       PG_PORT: $PG_PORT
-    links:
-      - psql
+    depends_on:
+      - postgres
