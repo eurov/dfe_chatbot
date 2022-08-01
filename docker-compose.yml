@@ -17,5 +17,7 @@ services:
       PG_NAME: $PG_NAME
       PG_HOST: postgres
       PG_PORT: $PG_PORT
-    depends_on:
+    links:
       - postgres
+    stdin_open: true
+    tty: true
