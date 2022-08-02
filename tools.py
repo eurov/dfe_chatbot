@@ -17,7 +17,7 @@ def choose_hagrid_greeting(ctx: Context) -> str:
 def get_grade(ctx: Context, actor: Actor, *args, **kwargs) -> tuple:
     """Returns transition route depends on user grade"""
     if ctx.misc:
-        return "second_year", "platform 9¾"
+        return "second_year", "kings_cross"
     return "first_year", "ollivander_shop"
 
 
@@ -106,6 +106,6 @@ def get_hat_navi_hint(ctx: Context, actor: Actor, *args, **kwargs) -> Context:
     """Returns Dumbledor's response"""
     if not ctx.last_request == "help":
         current_response = sorting_hat(ctx)
-        nav_commands = get_selected_nav_commands(NAVIGATOR, ["hat", "back", "help"])
+        nav_commands = get_selected_nav_commands(NAVIGATOR, ["next", "back", "help"])
         overwrite_response(ctx, current_response, nav_commands)
     return ctx

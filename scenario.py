@@ -79,7 +79,7 @@ script = {
         },
     },
     "second_year": {
-        "platform 9¾": {
+        "kings_cross": {
             RESPONSE: HARRY_SPEECH,
         },
     },
