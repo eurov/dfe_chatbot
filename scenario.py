@@ -74,7 +74,7 @@ script = {
             },
             RESPONSE: "",
             TRANSITIONS: {
-                ("second_year", "platform 9¾"): cnd.exact_match(r"next", re.I),
+                ("second_year", "kings_cross"): cnd.exact_match(r"next", re.I),
             },
         },
     },
