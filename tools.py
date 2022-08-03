@@ -21,12 +21,10 @@ def get_grade(ctx: Context, actor: Actor, *args, **kwargs) -> tuple:
     return "first_year", "ollivander_shop"
 
 
-def overwrite_response(
-    ctx: Context, current_response: str, nav_commands: list
-) -> Context:
+def overwrite_response(ctx: Context, current_response: str, nav_commands: list) -> Context:
     """Overwrites response with nav hints"""
     hint = "\n".join(nav_commands)
-    ctx.current_node.response = f"{current_response} \n{Fore.YELLOW}{hint}"
+    ctx.current_node.response = f"{current_response}\n{Fore.YELLOW}{hint}"
     ctx.overwrite_current_node_in_processing(ctx.current_node)
     return ctx
 
@@ -35,11 +33,7 @@ def get_selected_nav_commands(source, required_commands=None) -> list:
     """Returns selected nav commands"""
     if not required_commands:
         required_commands = source
-    return [
-        f"\t[{key}] > {value}"
-        for key, value in source.items()
-        if key in required_commands
-    ]
+    return [f"\t[{key}] > {value}" for key, value in source.items() if key in required_commands]
 
 
 def get_help(ctx: Context, actor: Actor, *args, **kwargs) -> Context:
@@ -97,9 +91,7 @@ def sorting_hat(ctx: Context) -> str:
     """Declares a faculty and save into ctx.misc"""
     faculty = FACULTIES[random.randint(1, len(FACULTIES))]
     ctx.misc["faculty"] = faculty
-    return (
-        f"Congrats! The hat chose the {faculty}!\n\t An unforgettable year awaits you!"
-    )
+    return f"Congrats! The hat chose the {faculty}!\n\t An unforgettable year awaits you!"
 
 
 def get_hat_navi_hint(ctx: Context, actor: Actor, *args, **kwargs) -> Context:
