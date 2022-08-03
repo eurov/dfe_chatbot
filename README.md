@@ -8,16 +8,10 @@ The bot offers you to complete a small quest, the plot of which is based on a bo
 A new user starts from the first year of study at Hogwarts. The user already in the database continues training from the corresponding year.
 ## Quick Start
 
-Install requirements from Pipfile:
-```
-pipenv install
-```
 
-You may pass the user ID when initializing the console chat:
 ```
-python main.py 1
+make start_app
 ```
-Otherwise, will be assigned a random ID.
 
 To start the chat, just type:
 ```
