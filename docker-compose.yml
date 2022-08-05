@@ -11,13 +11,14 @@ services:
       - '5432:5432'
   dfe_chatbot:
     build: .
+    container_name: dfe_chatbot
     environment:
       PG_USERNAME: $PG_USERNAME
       PG_PASSWORD: $PG_PASSWORD
       PG_NAME: $PG_NAME
       PG_HOST: postgres
       PG_PORT: $PG_PORT
-    links:
+    depends_on:
       - postgres
     stdin_open: true
     tty: true

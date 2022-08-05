@@ -108,5 +108,5 @@ class TestHandler(unittest.TestCase):
                 self.assertEqual(ctx.last_label[1], scenario["expected_node"], name)
 
 
-if __name__ == "__main":
+if __name__ == "__main__":
     unittest.main()

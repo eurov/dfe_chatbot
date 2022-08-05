@@ -21,9 +21,7 @@ DB_PORT = os.getenv("PG_PORT")
 DB_LOGIN = os.getenv("PG_USERNAME")
 DB_PASSWORD = os.getenv("PG_PASSWORD")
 
-db = connector_factory(  # try except?
-    f"postgresql://{DB_LOGIN}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
+db = connector_factory(f"postgresql://{DB_LOGIN}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}")  # try except?
 
 
 ACTOR = Actor(
@@ -44,9 +42,7 @@ def turn_handler(
     out_response = ctx.last_response
     db[user_id] = ctx
 
-    logging.info(
-        f"{Fore.WHITE}Bot: {Fore.GREEN}{out_response} \n{Fore.WHITE}<<hint>> I'm here: {ctx.last_label}"
-    )
+    logging.info(f"{Fore.WHITE}Bot: {Fore.GREEN}{out_response} \n{Fore.WHITE}<<hint>> I'm here: {ctx.last_label}")
     return out_response, ctx
 
 
