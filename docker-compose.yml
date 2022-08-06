@@ -20,5 +20,4 @@ services:
       PG_PORT: $PG_PORT
     depends_on:
       - postgres
-    stdin_open: true
-    tty: true
+
