@@ -39,7 +39,7 @@ new_user_requests = {
     "seventh_scenario": {
         "path": ["hi", "start", "1", "hat", "next"],
         "expected_response": "Yo, buddy!",
-        "expected_node": "platform 9¾",
+        "expected_node": "kings_cross",
     },
     "eighth_scenario": {
         "path": ["hi", "start", "1", "hat", "next", "blabla"],
@@ -60,7 +60,7 @@ known_user_requests = OrderedDict(
             {
                 "path": ["hi", "start", "1", "hat", "next"],
                 "expected_response": "Yo, buddy!",
-                "expected_node": "platform 9¾",
+                "expected_node": "kings_cross",
             },
         ),
         (
@@ -76,7 +76,7 @@ known_user_requests = OrderedDict(
             {
                 "path": ["hi", "start"],
                 "expected_response": "Yo, buddy!",
-                "expected_node": "platform 9¾",
+                "expected_node": "kings_cross",
             },
         ),
     ]
