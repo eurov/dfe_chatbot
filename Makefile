@@ -25,11 +25,11 @@ format: venv
 	$(VENV_PATH)\Scripts\black --line-length=120 .
 .PHONY: format
 
-run_postgres:
-	docker-compose up -d postgres
+run_db:
+	docker-compose up -d ydb-local
 	timeout 5
 
-test: venv run_postgres
+test: venv run_db
 	$(VENV_PATH)\Scripts\python test_main.py
 .PHONY: test
 
