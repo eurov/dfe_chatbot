@@ -1,5 +1,6 @@
 colorama==0.4.5
-df-db-connector[postgresql]==0.1.2
+#df-db-connector[ydb]==0.1.2
 df-engine==0.10.1
 python-dotenv==0.20.0
-
+ydb>=2.5.0
+git+https://github.com/EvgeniyEgoorov/dialog_flow_db_connector.git@feature/ydb_connector
