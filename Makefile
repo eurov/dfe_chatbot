@@ -11,25 +11,25 @@ $(VENV_PATH)\state: requirements.txt requirements_dev.txt
 	copy NUL $(VENV_PATH)\state
 
 build:
-	docker-compose build
+	docker-compose build dfe_chatbot
 
-run:
+up:
 	docker-compose up -d
 
-attach:
-	docker attach dfe_chatbot
+exec:
+	docker exec -it dfe_chatbot python main.py
 
-start_app: build run attach
+start_app: build up exec
 
 format: venv
 	$(VENV_PATH)\Scripts\black --line-length=120 .
 .PHONY: format
 
-run_postgres:
-	docker-compose up -d postgres
+run_db:
+	docker-compose up -d ydb-local
 	timeout 5
 
-test: venv run_postgres
+test: venv run_db
 	$(VENV_PATH)\Scripts\python test_main.py
 .PHONY: test
 

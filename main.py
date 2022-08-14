@@ -9,13 +9,11 @@ from dotenv import load_dotenv
 load_dotenv()  # take environment variables from .env.
 
 
-DB_NAME = os.getenv("PG_NAME")
-DB_HOST = os.getenv("PG_HOST")
-DB_PORT = os.getenv("PG_PORT")
-DB_LOGIN = os.getenv("PG_USERNAME")
-DB_PASSWORD = os.getenv("PG_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
 
-db = connector_factory(f"postgresql://{DB_LOGIN}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}")  # try except?
+db = connector_factory(f"grpc://{DB_HOST}:{DB_PORT}/{DB_NAME}")
 
 
 runner = ScriptRunner(
