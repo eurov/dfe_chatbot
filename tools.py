@@ -1,10 +1,12 @@
 import random
 import re
-from colorama import Fore
+from colorama import Fore, init
 
 from df_engine.core import Context, Actor
-
 from text import HELP_, WANDS, FACULTIES, NAVIGATOR, HAGRID_SPEECH
+
+
+init(autoreset=True)
 
 
 def choose_hagrid_greeting(ctx: Context) -> str:
