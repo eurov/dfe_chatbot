@@ -5,12 +5,8 @@ import df_engine.labels as lbl
 from tools import (
     get_help,
     pickup_wand,
-    get_hagrid_greeting,
-    get_ollivander_offer,
-    get_hogwarts_navi_hint,
-    get_hat_navi_hint,
     get_grade,
-    get_fallback_navi_hint,
+    get_navi_hint,
 )
 from df_engine.core.keywords import (
     TRANSITIONS,
@@ -29,14 +25,14 @@ from text import (
 script = {
     "root": {
         "start_node": {
-            PRE_RESPONSE_PROCESSING: {"hagrid_greeting": get_hagrid_greeting},
+            PRE_RESPONSE_PROCESSING: {"hagrid_greeting": get_navi_hint},
             RESPONSE: "",
             TRANSITIONS: {
                 get_grade: cnd.exact_match("start"),
             },
         },
         "fallback_node": {
-            PRE_RESPONSE_PROCESSING: {"navi": get_fallback_navi_hint},
+            PRE_RESPONSE_PROCESSING: {"navi": get_navi_hint},
             RESPONSE: "Avada Kedavra!",
         },
     },
@@ -52,7 +48,7 @@ script = {
     },
     "first_year": {
         "ollivander_shop": {
-            PRE_RESPONSE_PROCESSING: {"navi": get_ollivander_offer},
+            PRE_RESPONSE_PROCESSING: {"navi": get_navi_hint},
             RESPONSE: OLLIVANDER_SPEECH,
             PRE_TRANSITIONS_PROCESSING: {
                 "pickup_wand": pickup_wand,
@@ -61,7 +57,7 @@ script = {
         },
         "hogwarts_school": {
             PRE_RESPONSE_PROCESSING: {
-                "navi": get_hogwarts_navi_hint,
+                "navi": get_navi_hint,
             },
             RESPONSE: DUMBLEDORE_SPEECH,
             TRANSITIONS: {
@@ -70,7 +66,7 @@ script = {
         },
         "sorting_hat": {
             PRE_RESPONSE_PROCESSING: {
-                "navi": get_hat_navi_hint,
+                "navi": get_navi_hint,
             },
             RESPONSE: "",
             TRANSITIONS: {

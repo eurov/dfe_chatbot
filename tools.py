@@ -26,16 +26,9 @@ def get_grade(ctx: Context, actor: Actor, *args, **kwargs) -> tuple:
 def overwrite_response(ctx: Context, current_response: str, nav_commands: list) -> Context:
     """Overwrites response with nav hints"""
     hint = "\n".join(nav_commands)
-    ctx.current_node.response = f"{current_response}\n{Fore.YELLOW}{hint}"
+    ctx.current_node.response = f"{Fore.GREEN}{current_response}\n{Fore.YELLOW}{hint}"
     ctx.overwrite_current_node_in_processing(ctx.current_node)
     return ctx
-
-
-def get_selected_nav_commands(source, required_commands=None) -> list:
-    """Returns selected nav commands"""
-    if not required_commands:
-        required_commands = source
-    return [f"\t[{key}] > {value}" for key, value in source.items() if key in required_commands]
 
 
 def get_help(ctx: Context, actor: Actor, *args, **kwargs) -> Context:
@@ -46,46 +39,10 @@ def get_help(ctx: Context, actor: Actor, *args, **kwargs) -> Context:
     return ctx
 
 
-def get_hagrid_greeting(ctx: Context, actor: Actor, *args, **kwargs) -> Context:
-    """Returns Hagrid's greeting"""
-    if not ctx.last_request == "help":
-        current_response = choose_hagrid_greeting(ctx)
-        nav_commands = get_selected_nav_commands(NAVIGATOR, ["start", "help"])
-        overwrite_response(ctx, current_response, nav_commands)
-    return ctx
-
-
-def get_fallback_navi_hint(ctx: Context, actor: Actor, *args, **kwargs) -> Context:
-    """Returns fallback alert"""
-    if not ctx.last_request == "help":
-        current_response = f"{Fore.CYAN}{ctx.current_node.response}\n"
-        nav_commands = get_selected_nav_commands(NAVIGATOR, ["back", "help"])
-        overwrite_response(ctx, current_response, nav_commands)
-    return ctx
-
-
-def get_ollivander_offer(ctx: Context, actor: Actor, *args, **kwargs) -> Context:
-    """Returns Ollivander's offer"""
-    if not ctx.last_request == "help":
-        current_response = ctx.current_node.response
-        nav_commands = get_selected_nav_commands(WANDS)
-        overwrite_response(ctx, current_response, nav_commands)
-    return ctx
-
-
 def pickup_wand(ctx: Context, actor: Actor, *args, **kwargs) -> Context:
     """Puts the wand into ctx.misc"""
     if re.search(r"[1-3]", ctx.last_request):
         ctx.misc["wand"] = WANDS[int(ctx.last_request)]
-    return ctx
-
-
-def get_hogwarts_navi_hint(ctx: Context, actor: Actor, *args, **kwargs) -> Context:
-    """Returns Dunbledor's greeting"""
-    if not ctx.last_request == "help":
-        current_response = ctx.current_node.response
-        nav_commands = get_selected_nav_commands(NAVIGATOR, ["hat", "back", "help"])
-        overwrite_response(ctx, current_response, nav_commands)
     return ctx
 
 
@@ -96,10 +53,32 @@ def sorting_hat(ctx: Context) -> str:
     return f"Congrats! The hat chose the {faculty}!\n\t An unforgettable year awaits you!"
 
 
-def get_hat_navi_hint(ctx: Context, actor: Actor, *args, **kwargs) -> Context:
-    """Returns Dumbledor's response"""
+navi_hints = {
+    "start_node": ["start", "help"],
+    "ollivander_shop": WANDS,
+    "fallback_node": ["back", "help"],
+    "hogwarts_school": ["hat", "back", "help"],
+    "sorting_hat": ["next", "back", "help"],
+}
+
+
+def format_selected_nav_commands(source, required_commands=None) -> list:
+    """Returns selected nav commands"""
+    if not required_commands:
+        required_commands = source
+    return [f"\t[{key}] > {value}" for key, value in source.items() if key in required_commands]
+
+
+def get_navi_hint(ctx: Context, actor: Actor, *args, **kwargs) -> Context:
     if not ctx.last_request == "help":
-        current_response = sorting_hat(ctx)
-        nav_commands = get_selected_nav_commands(NAVIGATOR, ["next", "back", "help"])
+        current_response = ctx.current_node.response
+        if ctx.last_label[1] == "start_node":
+            current_response = choose_hagrid_greeting(ctx)
+        elif ctx.last_label[1] == "sorting_hat":
+            current_response = sorting_hat(ctx)
+        if ctx.last_label[1] == "ollivander_shop":
+            nav_commands = format_selected_nav_commands(WANDS)
+        else:
+            nav_commands = format_selected_nav_commands(NAVIGATOR, navi_hints[ctx.last_label[1]])
         overwrite_response(ctx, current_response, nav_commands)
     return ctx
