@@ -1,6 +1,9 @@
 colorama==0.4.5
 df-engine==0.10.1
 python-dotenv==0.20.0
-ydb>=2.5.0
-git+https://github.com/EvgeniyEgoorov/dialog_flow_db_connector.git@c7f61c57f95b80a609b42c7af1ee652e14472112  #fix_ydb_contexts
-df_runner==0.1.2
+df_runner==0.2.0
+git+https://github.com/EvgeniyEgoorov/dialog_flow_db_connector.git@31dd583
+ydb
+nest_asyncio
+asyncio
+requests

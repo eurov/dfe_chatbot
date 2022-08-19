@@ -1,9 +1,11 @@
 import unittest
-import random
+import uuid
 from collections import OrderedDict
 
-from main import turn_handler, ACTOR, db
+from main import db
+from df_runner import Pipeline
 
+from scenario import script
 
 new_user_requests = {
     "first_scenario": {
@@ -83,29 +85,37 @@ known_user_requests = OrderedDict(
 )
 
 
-class TestHandler(unittest.TestCase):
-    def test_new_user(self) -> None:
-        for name, scenario in new_user_requests.items():
-            user_id = str(random.randint(0, 100))
-            with self.subTest(name=name):
-                out_response = None
-                for request in scenario["path"]:
-                    out_response, ctx = turn_handler(request, user_id, ACTOR)
-                if "expected_response" in scenario:
-                    self.assertTrue(scenario["expected_response"] in out_response, name)
-                self.assertEqual(ctx.last_label[1], scenario["expected_node"], name)
-                db.clear()
+pipeline = Pipeline.from_script(
+    script=script,
+    start_label=("root", "start_node"),
+    fallback_label=("root", "fallback_node"),
+    context_db=db,
+)
 
-    def test_known_user(self) -> None:
+
+class TestRunner(unittest.TestCase):
+    def execute_scenario(self, pipeline, name, scenario, ctx_id=None):
+        ctx = None
+        if not ctx_id:
+            ctx_id = uuid.uuid4()
+        out_response = None
+        for request in scenario["path"]:
+            ctx = pipeline(request, ctx_id)
+            out_response = ctx.last_response
+        if "expected_response" in scenario:
+            self.assertIn(scenario["expected_response"], out_response, name)
+        self.assertEqual(ctx.last_label[1], scenario["expected_node"], name)
+
+    def test_run_for_new_user(self):
+        for name, scenario in new_user_requests.items():
+            with self.subTest(name):
+                self.execute_scenario(pipeline, name, scenario)
+
+    def test_run_for_known_user(self):
+        ctx_id = uuid.uuid4()
         for name, scenario in known_user_requests.items():
-            user_id = "1000"
-            with self.subTest(name=name):
-                out_response = None
-                for request in scenario["path"]:
-                    out_response, ctx = turn_handler(request, user_id, ACTOR)
-                if "expected_response" in scenario:
-                    self.assertTrue(scenario["expected_response"] in out_response, name)
-                self.assertEqual(ctx.last_label[1], scenario["expected_node"], name)
+            with self.subTest(name):
+                self.execute_scenario(pipeline, name, scenario, ctx_id)
 
 
 if __name__ == "__main__":

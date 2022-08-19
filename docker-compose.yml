@@ -4,9 +4,10 @@ services:
     build: .
     container_name: dfe_chatbot
     environment:
-      DB_NAME: $DB_NAME
-      DB_HOST: 'ydb-local'
-      DB_PORT: $DB_PORT
+      YDB_NAME: $YDB_NAME
+      YDB_HOST: 'ydb-local'
+      YDB_PORT: $YDB_PORT
+      YDB_ANONYMOUS_CREDENTIALS: 1
     depends_on:
       - 'ydb-local'
   ydb-local:
