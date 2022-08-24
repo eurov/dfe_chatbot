@@ -1,5 +1,6 @@
 colorama==0.4.5
 df-engine==0.10.1
 python-dotenv==0.20.0
-df_runner==0.2.1
 df-db-connector[ydb]==0.3.1
+df_runner==0.1.1
+df_telegram_connector
