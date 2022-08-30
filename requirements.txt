@@ -1,6 +1,6 @@
 python-dotenv==0.20.0
 df-db-connector[ydb]==0.3.1
 df_runner==0.1.1
-git+https://github.com/EvgeniyEgoorov/dialog_flow_telegram_connector.git@292e199
+git+https://github.com/EvgeniyEgoorov/dialog_flow_telegram_connector.git@8858497
 git+https://github.com/EvgeniyEgoorov/dialog_flow_engine.git@fd8a4e0
 
