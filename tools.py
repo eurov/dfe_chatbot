@@ -1,12 +1,8 @@
 import random
 import re
-from colorama import Fore, init
 
 from df_engine.core import Context, Actor
 from text import HELP_, WANDS, FACULTIES, NAVIGATOR, HAGRID_SPEECH
-
-
-init(autoreset=True)
 
 
 def choose_hagrid_greeting(ctx: Context) -> str:
@@ -26,7 +22,7 @@ def get_grade(ctx: Context, actor: Actor, *args, **kwargs) -> tuple:
 def overwrite_response(ctx: Context, current_response: str, nav_commands: list) -> Context:
     """Overwrites response with nav hints"""
     hint = "\n".join(nav_commands)
-    ctx.current_node.response = f"{Fore.GREEN}{current_response}\n{Fore.YELLOW}{hint}"
+    ctx.current_node.response = f"{current_response}\n{hint}"
     ctx.overwrite_current_node_in_processing(ctx.current_node)
     return ctx
 
@@ -34,7 +30,7 @@ def overwrite_response(ctx: Context, current_response: str, nav_commands: list) 
 def get_help(ctx: Context, actor: Actor, *args, **kwargs) -> Context:
     """Returns help hint"""
     if re.search(r"(?i)(help)", ctx.last_request):
-        ctx.current_node.response = f"{ctx.last_response} \n{Fore.CYAN}{HELP_}"
+        ctx.current_node.response = f"{ctx.last_response} \n{HELP_}"
         ctx.overwrite_current_node_in_processing(ctx.current_node)
     return ctx
 
